@@ -4,6 +4,7 @@ set(WIFI_PASSWORD "${WIFI_PASSWORD}" CACHE INTERNAL "WiFi password for examples"
 add_subdirectory(blink)
 add_subdirectory(wifi_scan)
 add_subdirectory(access_point)
+add_subdirectory(picow_blink_button)
 
 if ("${WIFI_SSID}" STREQUAL "")
     message("Skipping some Pico W examples as WIFI_SSID is not defined")
