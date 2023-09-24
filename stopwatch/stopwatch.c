@@ -39,11 +39,11 @@ bool debounce_button(uint gpio)
 
     // Check if the current time has passed the debounce delay
     // and if the button state has changed
-    if (currentTime - lastDebouncedTime > DEBOUNCE_DELAY_MS * 1000 && currentButtonState != lastButtonState)
+    if (currentButtonState != lastButtonState
+    && currentTime - lastDebouncedTime > DEBOUNCE_DELAY_MS * 1000)
     {
         // update the lastDebouncedTime- the time when the button state changed
         lastDebouncedTime = currentTime;
-        printf("Pseudo-button toggled\n");
 
         // return the new button state
         return currentButtonState;
@@ -51,27 +51,6 @@ bool debounce_button(uint gpio)
     // return the last button state, since no change to state
     return lastButtonState;
 }
-
-// bool debounce_button(uint gpio)
-// {
-//     // Debouncing algorithm based on checking the button's state multiple
-//     // times consecutively before considering it as a valid state change
-//     // *not the most efficient, while loop introduces unnecessary delay
-//     uint64_t currentTime = time_us_64();
-//     bool currentButtonState = gpio_get(gpio);
-//     int consecutiveCount = 1000;
-//     if (currentButtonState != lastButtonState){
-//         while (consecutiveCount != 0){
-//             if (gpio_get(gpio) != currentButtonState)
-//                 return lastButtonState;
-//             consecutiveCount--;
-//         }
-//         lastDebouncedTime = currentTime;
-//         printf("Pseudo-button triggered\n");
-//         return currentButtonState;
-//     }
-//     return lastButtonState;
-// }
 
 void gpio_callback(uint gpio, uint32_t events)
 {
@@ -119,17 +98,24 @@ bool stop_stopwatch(repeating_timer_t *stopwatch)
 int main()
 {
     init_gpio();
+
     // Enable GPIO interrupt on rising and falling edges
     gpio_set_irq_enabled_with_callback(BTN_PIN, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &gpio_callback);
+
+    // repeating_timer for stopwatch to print elapsed time
     struct repeating_timer stopwatch;
+
     volatile bool stopwatchRunning = false;
 
     while (true)
     {
+        // pseudo-button triggered to start the timer
         if (lastButtonState && !stopwatchRunning)
         {
             stopwatchRunning = start_stopwatch(&stopwatch);
         }
+
+        // pseudo-button triggered to stop the timer
         else if (!lastButtonState && stopwatchRunning)
         {
             stopwatchRunning = stop_stopwatch(&stopwatch);
