@@ -4,6 +4,8 @@ add_executable(adc_console
 
 target_link_libraries(adc_console pico_stdlib hardware_adc)
 
+pico_enable_stdio_usb(adc_console 1)
+
 # create map/bin/hex file etc.
 pico_add_extra_outputs(adc_console)
 

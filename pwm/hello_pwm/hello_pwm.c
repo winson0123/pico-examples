@@ -18,13 +18,13 @@ int main() {
 
     // Find out which PWM slice is connected to GPIO 0 (it's slice 0)
     uint slice_num = pwm_gpio_to_slice_num(0);
-
+    pwm_set_clkdiv(slice_num, 100);
     // Set period of 4 cycles (0 to 3 inclusive)
-    pwm_set_wrap(slice_num, 3);
+    pwm_set_wrap(slice_num, 12500);
     // Set channel A output high for one cycle before dropping
-    pwm_set_chan_level(slice_num, PWM_CHAN_A, 1);
+    pwm_set_chan_level(slice_num, PWM_CHAN_A, 12500/2);
     // Set initial B output high for three cycles before dropping
-    pwm_set_chan_level(slice_num, PWM_CHAN_B, 3);
+    // pwm_set_chan_level(slice_num, PWM_CHAN_B, 3);
     // Set the PWM running
     pwm_set_enabled(slice_num, true);
     /// \end::setup_pwm[]

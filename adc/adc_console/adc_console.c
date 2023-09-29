@@ -24,7 +24,7 @@ void __not_in_flash_func(adc_capture)(uint16_t *buf, size_t count) {
 }
 
 int main(void) {
-    stdio_init_all();
+    stdio_usb_init();
     adc_init();
     adc_set_temp_sensor_enabled(true);
 
